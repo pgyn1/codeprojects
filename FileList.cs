@@ -144,7 +144,9 @@ namespace ReturnChar
                 {
                     var arraysplit = x.Split(',');
 
-                    astreamwrite.WriteLine($"{arraysplit[0]}, {arraysplit[1]}, {arraysplit[2]}, {arraysplit[3]}, {arraysplit[1]}, {arraysplit[2]}, _null, {arraysplit[7]}");
+                        astreamwrite.WriteLine($"{arraysplit[0]}, {arraysplit[1]}, {arraysplit[2]}, {arraysplit[3]}, {arraysplit[4]}, {arraysplit[5]}, {arraysplit[6]}, _null");
+                    
+                   
 
                 }
             }

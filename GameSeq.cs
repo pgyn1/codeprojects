@@ -62,9 +62,10 @@ namespace ReturnChar
 
         public void Game()
         {
-
+           
             try
             {
+                
                 if (NewRestore.Equals('R'))
                 {
 
@@ -238,6 +239,7 @@ namespace ReturnChar
                     
                 }
 
+                SaveRestoreFunc.WriteScores(Player.GetComputerScore(), Player.GetPlayerScore());
                 Console.ReadKey();
                 Menu.DisplayMenuOptions();
             }
@@ -264,6 +266,7 @@ namespace ReturnChar
                     SwitchMode();
                 }
 
+                SaveRestoreFunc.WriteScores(Player.GetComputerScore(), Player.GetPlayerScore());
                 Console.ReadKey();
                 Menu.DisplayMenuOptions();
             }
@@ -298,6 +301,7 @@ namespace ReturnChar
                     SwitchMode();
                 }
 
+                SaveRestoreFunc.WriteScores(Player.GetComputerScore(), Player.GetPlayerScore());
                 Console.ReadKey();
                 Menu.DisplayMenuOptions();
             }
@@ -324,6 +328,7 @@ namespace ReturnChar
                     SwitchMode();
                 }
 
+                SaveRestoreFunc.WriteScores(Player.GetComputerScore(), Player.GetPlayerScore());
                 Console.ReadKey();
                 Menu.DisplayMenuOptions();
             }

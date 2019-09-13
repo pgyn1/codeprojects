@@ -241,6 +241,7 @@ namespace ReturnChar
                     }
                     else
                     {
+                        Console.WriteLine("Player --> SetComputerInput(List<Book>) + Returning GetAlphabet, not displaying prompt just letter!");
                         computerinput = GetAlphabet();
                         Console.WriteLine($"{UserBoxPlayer.GamePromptComp} {computerinput}"); //print output
                     }

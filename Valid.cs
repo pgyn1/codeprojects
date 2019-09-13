@@ -25,7 +25,7 @@ namespace ReturnChar
         public Valid()
         {
             IsValid = false;
-            AnsInvalid = "\t\t\t\tAnswer is invalid; answer already selected, empty input or tocase/twostr==false. ";
+            AnsInvalid = "\t\t\t\tAnswer is invalid."; // answer already selected, empty input or tocase/twostr==false. 
             AnsValid = "\t\t\t\tAnswer valid BookID added.";
         }
 
@@ -53,8 +53,8 @@ namespace ReturnChar
                     SetSelectedAnsBooks(aListOfBooks[i]); GetValidDictionary().Remove(aListOfBooks[i]); IsValid = true; break;
                 }
             }
-
-            if(IsValid == false) { Console.WriteLine($""); }
+            
+            if(IsValid == false) { Console.WriteLine($"{AnsInvalid}"); }
 
             return IsValid;
 
@@ -73,18 +73,19 @@ namespace ReturnChar
                 {
                     for (int i = 0; i < aListOfBooks.Count(); i++)
                     {
-                        //Add a cycle through the associations here
                         if (TwoStr(playerinput, aListOfBooks[i].Name))
                         {
-                            Console.WriteLine($"{AnsValid}"); SetSelectedAnsBooks(aListOfBooks[i]); GetValidDictionary().Remove(aListOfBooks[i]); IsValid = true; break;
+                            Console.WriteLine($"{AnsValid}");
+                            SetSelectedAnsBooks(aListOfBooks[i]); GetValidDictionary().Remove(aListOfBooks[i]); IsValid = true; break;
                         }
                         else
                         {
-                            for(int j =0; j < aListOfBooks[i].NameAssoc.Count(); j++)
+                            for(int j =0; j < aListOfBooks[i].NameAssoc.Count(); j++) // Cycle through the name associations
                             {
                                 if (TwoStr(playerinput, aListOfBooks[i].NameAssoc[j]))
                                 {
-                                    Console.WriteLine($"{AnsValid}"); SetSelectedAnsBooks(aListOfBooks[i]); GetValidDictionary().Remove(aListOfBooks[i]); IsValid = true; break;
+                                    Console.WriteLine($"{AnsValid}");
+                                    SetSelectedAnsBooks(aListOfBooks[i]); GetValidDictionary().Remove(aListOfBooks[i]); IsValid = true; break;
                                 }
                             }
                         }
@@ -101,8 +102,6 @@ namespace ReturnChar
 
             return IsValid;
         }
-
-        
 
         //for medium & hard
         public bool ValidNameTypeWhere(List<string> playerinputlist)

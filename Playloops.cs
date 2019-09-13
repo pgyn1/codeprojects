@@ -48,7 +48,7 @@ namespace ReturnChar
                     Console.WriteLine($"{Player.GetAlphabet().PadLeft(50, ' ')} {Player.GetAlphabet()}  {Player.GetAlphabet()}" +
                         $"  {Player.GetAlphabet()} {Player.GetAlphabet()} {Player.GetAlphabet()} {Player.GetAlphabet()} {Player.GetAlphabet()} {Player.GetAlphabet()} " +
                         $" {Player.GetAlphabet()} {Player.GetAlphabet()} {Player.GetAlphabet()} {Player.GetAlphabet()} {Player.GetAlphabet()}");
-                    Thread.Sleep(45);
+                    Thread.Sleep(35);
                 }
             }
 
