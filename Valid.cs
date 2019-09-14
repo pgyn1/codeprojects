@@ -25,8 +25,8 @@ namespace ReturnChar
         public Valid()
         {
             IsValid = false;
-            AnsInvalid = "\t\t\t\tAnswer is invalid."; // answer already selected, empty input or tocase/twostr==false. 
-            AnsValid = "\t\t\t\tAnswer valid BookID added.";
+            AnsInvalid = "\t\t\t\t{ Answer is invalid }\n"; // answer already selected, empty input or tocase/twostr==false. 
+            AnsValid = "\t\t\t\t{ Answer valid BookID added }\n";
         }
 
         //ValidDictAns ListBooks is reduced over the course of the game
@@ -141,11 +141,12 @@ namespace ReturnChar
                 { 
                     if (GetContainsTrue(aListOfBooks, playerinputlist, i)) //Tests for the name type where 
                     {
-                        if(ExtraListAssoc(aListOfBooks[i],playerinputlist[3]))
+                        //Console.WriteLine("gamelist extra is not a digit
+                        if (ExtraListAssoc(aListOfBooks[i], playerinputlist[3]))
                         {
                             Console.WriteLine($"{AnsValid}"); SetSelectedAnsBooks(aListOfBooks[i]); GetValidDictionary().Remove(aListOfBooks[i]); IsValid = true; break;
                         }
-                                    
+       
                     }
 
                     i++;
@@ -291,29 +292,37 @@ namespace ReturnChar
         }
 
         //Extra as a list of strings
-        public static bool IsRangeExtra(string extra, string playerinput)
+        public static bool IsRangeExtra(Book extra, string playerinput)
         {
 
-            if (IsStringDigit(extra) && IsStringDigit(playerinput))
-            {
-                //playerinputlist = playerinput // Extra [3]
-                double extrainp = Convert.ToInt32(extra);
-                int playerinputx = Convert.ToInt32(playerinput);
+            bool isdigit = false;
 
-                // - .05 lowerlimit ; +.05 upperlimit
-                if (playerinputx >= extrainp - (extrainp * 0.05) && playerinputx <= extrainp + (extrainp * 0.05))
+            if (extra.ExtraList.Any())
+            {
+                for(int i = 0; i < extra.ExtraList.Count(); i++)
                 {
-                    return true;
-                }
-                else
-                {
-                    return false;
+                    if(IsStringDigit(extra.ExtraList[i]) && IsStringDigit(playerinput))
+                    {
+                        //playerinputlist = playerinput // Extra [3]
+                        double extrainp = Convert.ToInt32(extra);
+                        int playerinputx = Convert.ToInt32(playerinput);
+                        
+                        // - .05 lowerlimit ; +.05 upperlimit
+                        if (playerinputx >= extrainp - (extrainp * 0.05) && playerinputx <= extrainp + (extrainp * 0.05))
+                        {
+                            isdigit = true; break;
+                        }
+                     
+                    }
+                   
                 }
             }
             else
             {
-                return false;
+                return isdigit;
             }
+
+            return isdigit;
 
 
         }

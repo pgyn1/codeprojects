@@ -52,6 +52,7 @@ namespace ReturnChar
             GameModelOne = "\t\t\tGame model one";
             NoElementsInSequence = "\t\t\t!Any() Sequence";
             RandNumber = RandGameSeq.Next(2); // Return a random number < 2 for the gamemodel cycles
+            
             Game();
         }
 
@@ -62,70 +63,9 @@ namespace ReturnChar
 
         public void Game()
         {
-           
-            try
+            if(NewRestore.Equals('R') || NewRestore.Equals('N'))
             {
-                
-                if (NewRestore.Equals('R'))
-                {
-
-                    const string GameFiles = @"C:\temp\gamefiles"; //set of gamefiles
-
-                    // Display a set of gamefiles to open with information
-                    foreach (string x in Directory.EnumerateFiles(GameFiles))
-                    {
-                        Console.WriteLine($"{x}");
-                    }
-
-                    RestoredSavedArray = SaveRestoreFunc.RestoreGameVars(Console.ReadLine()); //
-                    const string ReadFromPathGameArray = @"C:\temp\gamefiles\savelist.csv";
-
-                    DiffLvl = GetStartGameOptions.GetChar(RestoredSavedArray[0]);
-                    Mode = GetStartGameOptions.GetChar(RestoredSavedArray[1]);
-                    RandNumber = Convert.ToInt32(RestoredSavedArray[6]);
-
-                    switch (Mode.ToString().ToUpper())
-                    {
-                        case "Z":
-                            Player.RestoreComputerScore(Convert.ToInt32(RestoredSavedArray[5])); // 6
-                            Player.RestorePlayerScore(Convert.ToInt32(RestoredSavedArray[4])); // 5 
-                            GameScore = (Convert.ToInt32(RestoredSavedArray[2])); // 2
-                            break;
-                        default:
-                            break;
-                    }
-
-                    switch (DiffLvl.ToString().ToUpper())
-                    {
-                        case "E":
-                            //Display rules
-                            GameArray = SaveRestoreFunc.RestoreGameArray(ReadFromPathGameArray);
-                            GetGameModelZero();
-                            break;
-                        case "M":
-                            //Display rules
-                            GameArray = SaveRestoreFunc.RestoreGameArray(ReadFromPathGameArray);
-                            GetGameModelZero();
-                            break;
-                        case "H":
-                            //
-                            GameArray = SaveRestoreFunc.RestoreGameArray(ReadFromPathGameArray);
-                            GetGameModelOne();
-                            break;
-                        case "S":
-                            //
-                            GameArray = SaveRestoreFunc.RestoreGameArray(ReadFromPathGameArray);
-                            GetGameModelOne();
-                            break;
-                        default:
-                            //
-                            GameArray = SaveRestoreFunc.RestoreGameArray(ReadFromPathGameArray);
-                            GetGameModelZero();
-                            break;
-                    }
-
-                }
-                else // New
+                try
                 {
                     Player.RestoreComputerScore(0);
                     Player.RestorePlayerScore(0);
@@ -169,28 +109,30 @@ namespace ReturnChar
                             if (GameArray.Count() == 0 || GameArray == null) { } else { GetGameModelZero(); }
                             break;
                     }
+
+
+                }
+                catch (ArgumentNullException argexc)
+                {
+                    Console.WriteLine($"GameSeq -> Game() + {argexc.Message}\n{argexc.InnerException}");
+                    Console.WriteLine("Game array = null");
+                    Console.WriteLine("Return to menu");
+                    Console.ReadKey();
+                    Menu.DisplayMenuOptions();
+                    //Environment.Exit(Environment.ExitCode);
+
                 }
 
+                catch (Exception e)
+                {
+                    Console.WriteLine("GameSeq -> Game()");
+                    Console.WriteLine($"{e.Message}\n{e.InnerException}");
+                    Console.WriteLine("Return to menu");
+                    Console.ReadKey();
+                    Menu.DisplayMenuOptions();
+                }
             }
-            catch (ArgumentNullException argexc)
-            {
-                Console.WriteLine($"GameSeq -> Game() + {argexc.Message}\n{argexc.InnerException}");
-                Console.WriteLine("Game array = null");
-                Console.WriteLine("Return to menu");
-                Console.ReadKey();
-                Menu.DisplayMenuOptions();
-                //Environment.Exit(Environment.ExitCode);
-
-            }
-
-            catch (Exception e)
-            {
-                Console.WriteLine("GameSeq -> Game()");
-                Console.WriteLine($"{e.Message}\n{e.InnerException}");
-                Console.WriteLine("Return to menu");
-                Console.ReadKey();
-                Menu.DisplayMenuOptions();
-            }
+         
  
 
         }

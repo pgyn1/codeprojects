@@ -138,6 +138,23 @@ namespace ReturnChar
             }
         }
 
+        public bool CheckLengthDictionary(List<Book> x)
+        {
+            //Filelist
+            //list books - > list strings
+
+            if (x.Count() >= 100 && x.Count() <= 300)
+            {
+                //and column count = 8
+                return true;
+            }
+            else
+            {
+                Console.WriteLine($"Length of dictionary must be b/t 100 & 300");
+        
+                return false;
+            }
+        }
         //Set ComStateList
         public bool GetComStateListEasy()
         {
@@ -148,11 +165,7 @@ namespace ReturnChar
                 var DictAns = GetDictionary();
                 var tempIntList = new List<int>();
 
-                if (DictAns.Count() < 100 || DictAns.Count() > 300)
-                {
-                    Console.WriteLine($"Length of dictionary < 100 || > 300");
-                    return false;
-                }
+                if (!CheckLengthDictionary(DictAns)) { return false; }
 
                 //A limit minimum on the size of a list?
                 for (int i = 0; i < 10; i++)
@@ -185,11 +198,7 @@ namespace ReturnChar
                 var DictAns = GetDictionary();
                 var tempIntList = new List<int>();
 
-                if (DictAns.Count() < 100 || DictAns.Count() > 300)
-                {
-                    Console.WriteLine($"Length of dictionary < 100 || > 300");
-                    return false;
-                }
+                if (!CheckLengthDictionary(DictAns)) { return false; }
 
                 for (int i = 0; i < 30; i++)
                 {
@@ -229,11 +238,7 @@ namespace ReturnChar
                 var DictAns = GetDictionary();
                 var tempIntList = new List<int>();
 
-                if (DictAns.Count() < 100 || DictAns.Count() > 300)
-                {
-                    Console.WriteLine($"Length of dictionary < 100 || > 300");
-                    return false;
-                }
+                if (!CheckLengthDictionary(DictAns)) { return false; }
 
                 for (int i = 0; i < Convert.ToInt32(0.50 * DictAns.Count()); i++)
                 {
@@ -266,11 +271,7 @@ namespace ReturnChar
                 var DictAns = GetDictionary();
                 var tempIntList = new List<int>();
 
-                if (DictAns.Count() < 100 || DictAns.Count() > 300)
-                {
-                    Console.WriteLine($"Length of dictionary < 100 || > 300");
-                    return false;
-                }
+                if (!CheckLengthDictionary(DictAns)) { return false; }
 
                 for (int i = 0; i < Convert.ToInt32(0.75 * DictAns.Count()); i++)
                 {

@@ -140,12 +140,14 @@ namespace ReturnChar
 
             using (StreamWriter astreamwrite = new StreamWriter(write))
             {
+                int count = 0;
                 foreach (string x in tempdictans)
                 {
                     var arraysplit = x.Split(',');
+                        
+                    astreamwrite.WriteLine($"{count}, {arraysplit[0]}, {arraysplit[1]}, {arraysplit[2]}, {arraysplit[3]}, {arraysplit[4]}, {arraysplit[5]}, {arraysplit[6]}");
 
-                        astreamwrite.WriteLine($"{arraysplit[0]}, {arraysplit[1]}, {arraysplit[2]}, {arraysplit[3]}, {arraysplit[4]}, {arraysplit[5]}, {arraysplit[6]}, _null");
-                    
+                    count++;
                    
 
                 }

@@ -36,7 +36,7 @@ namespace ReturnChar
         {
             playerinput = "";
             computerinput = "";
-            ExceededLimit = "Exceeded limit";
+            ExceededLimit = "{Exceeded time limit}".PadLeft(50,' ');
             computercounter = 0;
             playercounter = 0;
             limitzero = 30000;
@@ -60,7 +60,8 @@ namespace ReturnChar
                     if(stopwatchplayer.ElapsedMilliseconds > limitzero)
                     {
 
-                        Console.WriteLine($"{ExceededLimit}"); SetPlayerScore(-1); playerinput = GetAlphabet();
+                        Console.WriteLine($"{ExceededLimit}");
+                        IfPlayerNotValidLimit();
                     }
                     else
                     {
@@ -89,7 +90,7 @@ namespace ReturnChar
                         //name, type, where, additionalInfoReq (river length) // 0 - 3
                         for (int i = 0; i < 4; i++)
                         {
-                            Console.Write($"{UserBoxPlayer.GamePromptPlayer}");
+                            Console.Write($"{UserBoxPlayer.GamePromptPlayerInput} ");
                             var playinput = Console.ReadLine();
                             playerinputlist.Add(playinput);
 
@@ -101,7 +102,8 @@ namespace ReturnChar
                     stopwatchplayer.Stop();
                     if (stopwatchplayer.ElapsedMilliseconds > limitzero)
                     {
-                        Console.WriteLine($"{ExceededLimit}"); SetPlayerScore(-1); playerinput = GetAlphabet();
+                        Console.WriteLine($"{ExceededLimit}");
+                        IfPlayerNotValidLimit();
                     }
                     else
                     {
@@ -140,7 +142,7 @@ namespace ReturnChar
                         //name, type, where // 0 - 2
                         for (int i = 0; i < 3; i++)
                         {
-                            Console.Write($"{UserBoxPlayer.GamePromptPlayer}");
+                            Console.Write($"{UserBoxPlayer.GamePromptPlayerInput} ");
                             var playinput = Console.ReadLine();
                             playerinputlist.Add(playinput);
 
@@ -152,7 +154,8 @@ namespace ReturnChar
 
                     if (stopwatchplayer.ElapsedMilliseconds > limitzero)
                     {
-                        Console.WriteLine($"{ExceededLimit}"); SetPlayerScore(-1); playerinput = GetAlphabet();
+                        Console.WriteLine($"{ExceededLimit}");
+                        IfPlayerNotValidLimit();
                     }
                     else
                     {
@@ -198,7 +201,7 @@ namespace ReturnChar
 
                 if(stopwatchplayer.ElapsedMilliseconds > limitzero)
                 {
-                    Console.WriteLine($"{ExceededLimit}"); SetPlayerScore(-1); playerinput = GetAlphabet();
+                    Console.WriteLine($"{ExceededLimit}"); IfPlayerNotValidLimit();
                 }
                 else
                 {
@@ -237,13 +240,13 @@ namespace ReturnChar
 
                     if (ValidPlayer.ValidComputerName(computerinput))
                     {
-                        Console.WriteLine($"{UserBoxPlayer.GamePromptComp} {computerinput}"); //print output
+                        Console.WriteLine($"{UserBoxPlayer.GamePromptCompInput} {computerinput} ]"); //print output
                     }
                     else
                     {
                         Console.WriteLine("Player --> SetComputerInput(List<Book>) + Returning GetAlphabet, not displaying prompt just letter!");
                         computerinput = GetAlphabet();
-                        Console.WriteLine($"{UserBoxPlayer.GamePromptComp} {computerinput}"); //print output
+                        Console.WriteLine($"{UserBoxPlayer.GamePromptCompInput} {computerinput} ]"); //print output
                     }
                     
                 }
@@ -253,14 +256,14 @@ namespace ReturnChar
                     Console.WriteLine("Player --> SetComputerInput(List<Book>)");
                     Console.WriteLine("Gamearray = none. Returning a random char.");
                     computerinput = GetAlphabet();
-                    Console.WriteLine($"{UserBoxPlayer.GamePromptComp} {computerinput}");
+                    Console.WriteLine($"{UserBoxPlayer.GamePromptCompInput} {computerinput} ]");
                 }
             }
             catch(Exception e)
             {
                 Console.WriteLine($"Player -> SetComputerInput(List<Book>) + {e.Message}\n{e.InnerException}");
                 computerinput = GetAlphabet();
-                Console.WriteLine($"{UserBoxPlayer.GamePromptComp} {computerinput}");
+                Console.WriteLine($"{UserBoxPlayer.GamePromptCompInput} {computerinput} ]");
             }
            
 
@@ -283,19 +286,19 @@ namespace ReturnChar
 
                     if (ValidPlayer.ValidComputerName(computerinput))
                     {
-                        Console.WriteLine($"{UserBoxPlayer.GamePromptComp} {computerinput}");
+                        Console.WriteLine($"{UserBoxPlayer.GamePromptCompInput} {computerinput} ]");
                     }
                     else
                     {  
                         GetAlphabet();
-                        Console.WriteLine($"{UserBoxPlayer.GamePromptComp} {computerinput}");
+                        Console.WriteLine($"{UserBoxPlayer.GamePromptCompInput} {computerinput} ]");
                     }
                    
                 }
                 else
                 {
                     computerinput = GetAlphabet();
-                    Console.WriteLine($"{UserBoxPlayer.ComputerNoResponse} {computerinput}");
+                    Console.WriteLine($"{UserBoxPlayer.ComputerNoResponse} {computerinput} ]");
                     SetPlayerScore(1); // increment the player's score
                 }
 
@@ -361,9 +364,9 @@ namespace ReturnChar
             // to the left of prompt - Console.Write($"");
             do
             {
-                Console.WriteLine($"\t\t\t\tTime stamp = {stopwatchplayer.Elapsed.ToString()}");
-                Console.WriteLine($"{UserBoxPlayer.GamePromptPlayer}"); //Prompt for input
-                playerinput = Console.ReadLine().PadLeft(50,' ');
+                //Console.WriteLine($"\t\t\t\tTime stamp = {stopwatchplayer.Elapsed}");
+                Console.Write($"{UserBoxPlayer.GamePromptPlayerInput} "); //Prompt for input
+                playerinput = Console.ReadLine();
                 Console.Write("Continue(c) ?".PadLeft(50,' '));
                 
             } while (!Console.ReadLine().ToLower().Equals("c"));
@@ -372,9 +375,17 @@ namespace ReturnChar
         private static void IfPlayerNotValid()
         {
             playerinput = GetAlphabet(); //Assign a random char to the playerinput var
-            Console.WriteLine($"{UserBoxPlayer.PlayerNoResponse} {playerinput}");
+            Console.WriteLine($"{UserBoxPlayer.PlayerNoResponse} {playerinput} ]");
             SetComputerScore(1); //Increment the computer score by 1
         }
+
+        private static void IfPlayerNotValidLimit()
+        {
+            playerinput = GetAlphabet(); //Assign a random char to the playerinput var
+            Console.WriteLine($"Player returns invalid, playerscore - 1, Return char[ {playerinput} ]".PadLeft(50,' '));
+            SetPlayerScore(-1); //Decrement the player's score by 1
+        }
+
 
         public static string GetAlphabet()
         {
