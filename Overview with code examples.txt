@@ -1,0 +1,48 @@
+Code Examples
+
+#Web Control Ltd (Search function for payroll system, Unibasic language) 
+
+******* 
+* Begin @ ‘For X = 1 to N’
+* Where X = multivalue variable and N = Number/Upper limit of cycles 
+* Assign the first instance to a temp variable
+* Assign the search term to a temp variable
+* Convert to appropriate format (if processing hours worked) 
+* Compare the lowercase values
+* Increment the counter value 
+* Return results 
+********
+
+READNEXT ID_SEARCH ELSE GOTO 0001*
+READ REC_SEARCH FROM EMPLOYMST,ID_SEARCH ...
+
+FOR X = 1 TO N 
+  RECORD_VAL_VAR = REC_SEARCH <SFA,X> 
+  SEARCH_TEMP_VAR = SEARCH_TERM 
+  IF SFA = 10 THEN RECORD_VAL_VAR = OCONV(RECORD_VAL_VAR,"MD2")
+  IF DOWNCASE(RECORD_VAL_VAR) = DOWNCASE(SEARCH_TEMP_VAR) 
+      THEN  COUNTER_SEARCH += 1 
+      TEMP_STRING = "Matching ID":COL:ID_SEARCH 
+      CALL SB.DISP(4,"Found result for       ":SEARCH_TERM)  
+NEXT X
+
+0001*
+
+#FileList class (C# & excel spreadsheet processing)
+
+*****
+*Part of a querying function taken from a switch statement
+*array[i] is a string[] array split from a List<string>s
+*If the ith string == user input 
+*increment the num counter, write results and return the index of the entry
+*assign numbercount to num where we want to return the counter
+*****
+  case "equals":
+                        if (array[i].Trim().ToLower().Equals(j.ToLower()))
+                        {
+                            num++;
+                            Console.WriteLine($"{p} {num}");
+                            Console.WriteLine($"Index = {tempdict.IndexOf(p)}");
+                            numbercount = num;
+                        }
+                        break;
