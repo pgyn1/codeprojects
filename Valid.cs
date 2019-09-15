@@ -65,32 +65,36 @@ namespace ReturnChar
         {
            
             IsValid = false;
+            bool IsSearch = true;
+            int i = 0;
             List<Book> aListOfBooks = GetValidDictionary();
 
             try
             {
                 if (!string.IsNullOrEmpty(playerinput.Trim()))
                 {
-                    for (int i = 0; i < aListOfBooks.Count(); i++)
+                    while (i < aListOfBooks.Count() && IsSearch)
                     {
                         if (TwoStr(playerinput, aListOfBooks[i].Name))
                         {
                             Console.WriteLine($"{AnsValid}");
-                            SetSelectedAnsBooks(aListOfBooks[i]); GetValidDictionary().Remove(aListOfBooks[i]); IsValid = true; break;
+                            SetSelectedAnsBooks(aListOfBooks[i]); GetValidDictionary().Remove(aListOfBooks[i]); IsValid = true; IsSearch = false;
                         }
                         else
                         {
-                            for(int j =0; j < aListOfBooks[i].NameAssoc.Count(); j++) // Cycle through the name associations
+                            for (int j = 0; j < aListOfBooks[i].NameAssoc.Count(); j++) // Cycle through the name associations
                             {
                                 if (TwoStr(playerinput, aListOfBooks[i].NameAssoc[j]))
                                 {
                                     Console.WriteLine($"{AnsValid}");
-                                    SetSelectedAnsBooks(aListOfBooks[i]); GetValidDictionary().Remove(aListOfBooks[i]); IsValid = true; break;
+                                    SetSelectedAnsBooks(aListOfBooks[i]); GetValidDictionary().Remove(aListOfBooks[i]); IsValid = true; IsSearch = false;
                                 }
                             }
-                        }
 
+                        }
+                        i++;
                     }
+                   
                 }
             }
             catch (Exception e)

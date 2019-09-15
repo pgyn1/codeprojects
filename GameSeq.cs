@@ -181,9 +181,7 @@ namespace ReturnChar
                     
                 }
 
-                SaveRestoreFunc.WriteScores(Player.GetComputerScore(), Player.GetPlayerScore());
-                Console.ReadKey();
-                Menu.DisplayMenuOptions();
+                EndGameModel();
             }
             else
             {
@@ -208,25 +206,38 @@ namespace ReturnChar
                     SwitchMode();
                 }
 
-                SaveRestoreFunc.WriteScores(Player.GetComputerScore(), Player.GetPlayerScore());
-                Console.ReadKey();
-                Menu.DisplayMenuOptions();
+                EndGameModel();
+
             }
 
         }
 
-        //Model2
-        public void GetGameModelOne()
+        public void SetIsPlayingModelOne(int randnumber)
         {
-            GameModelOneDisplays();
-
-            if (RandNumber == 0)
+            if(randnumber == 0)
             {
                 //if 0 the comp turns 1st which means the player must have a random input
                 Player.SetPlayerInput(Player.GetAlphabet());
                 Console.WriteLine($"\t\t\tReturn Char {Player.GetPlayerInput()}");
                 Console.ReadLine();
 
+            }
+            else
+            {
+                //else the player 1st which means the computer must have a random input // A pass_ or a invalid response sets the prev to a random char GetAlphabet()
+                Player.SetComputerInput(Player.GetAlphabet());
+                Console.WriteLine($"\t\t\tReturn Char {Player.GetComputerInput()}");
+                Console.ReadLine();
+            }
+        }
+        //Model2
+        public void GetGameModelOne()
+        {
+            GameModelOneDisplays();
+            SetIsPlayingModelOne(RandNumber);
+
+            if (RandNumber == 0)
+            {
                 while (IsPlaying)
                 {
                     UserBoxGameSeq.SetOne(DiffLvl, Mode);
@@ -243,16 +254,10 @@ namespace ReturnChar
                     SwitchMode();
                 }
 
-                SaveRestoreFunc.WriteScores(Player.GetComputerScore(), Player.GetPlayerScore());
-                Console.ReadKey();
-                Menu.DisplayMenuOptions();
+                EndGameModel();
             }
             else
             {
-                //else the player 1st which means the computer must have a random input // A pass_ or a invalid response sets the prev to a random char GetAlphabet()
-                Player.SetComputerInput(Player.GetAlphabet());
-                Console.WriteLine($"\t\t\tReturn Char {Player.GetComputerInput()}");
-                Console.ReadLine();
 
                 while (IsPlaying)
                 {
@@ -270,11 +275,16 @@ namespace ReturnChar
                     SwitchMode();
                 }
 
-                SaveRestoreFunc.WriteScores(Player.GetComputerScore(), Player.GetPlayerScore());
-                Console.ReadKey();
-                Menu.DisplayMenuOptions();
+                EndGameModel();
             }
 
+        }
+
+        public void EndGameModel()
+        {
+            SaveRestoreFunc.WriteScores(Player.GetComputerScore(), Player.GetPlayerScore());
+            Console.ReadKey();
+            Menu.DisplayMenuOptions();
         }
 
         // X Y Z  TIME EMP T
