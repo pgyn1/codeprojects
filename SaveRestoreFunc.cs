@@ -9,12 +9,13 @@ namespace ReturnChar
 {
     class SaveRestoreFunc
     {
-        public readonly static char[] commadelim = { ',' };
+        private readonly static char[] commadelim = { ',' };
 
         //Save option
-        public const string WriteToPath = @"C:\temp\gamefiles\savenew.csv";
-        public const string WriteToPathList = @"C:\temp\gamefiles\savelist.csv";
+        private const string WriteToPath = @"";
+        private const string WriteToPathList = @"";
 
+        private static string highscorepath;
         public static string[] RestoredSavedGameValues {get; set;}
 
         //restoregamefile // We need a restoregamefile 
@@ -27,6 +28,7 @@ namespace ReturnChar
                 using (StreamWriter c = new StreamWriter(WriteToPath))
                 {
                     c.WriteLine($"{difflvl}, {mode}, {gamescore}, {timer}, {currentplayerscore}, {currentcomputerscore}, {randnumber} ");
+                    c.Close();
                 }
 
                 using (StreamWriter d = new StreamWriter(WriteToPathList))
@@ -35,13 +37,15 @@ namespace ReturnChar
                     {
                         d.WriteLine($"{y.Name}, {y.Type}, {y.Where}");
                     }
+
+                    d.Close();
                 }
                 return true; 
             }
-            catch (StackOverflowException e)
+            catch (Exception e)
             {
                 //
-                Console.WriteLine($"{e.Message}");
+                Console.WriteLine($"SaveRestoreFunc -> SaveGame(char,char,int,int,int,int,int,List<Book>) + \n {e.Message}\n {e.InnerException}");
                 return false;
             }
            
@@ -74,36 +78,57 @@ namespace ReturnChar
             }
         }
 
+        public static void SetHighScorePath(string x)
+        {
+            highscorepath = x;
+        }
+
+        public static void SetHighScorePath()
+        {
+            Console.Write("Input high score path: ");
+            highscorepath = Console.ReadLine().ToLower();
+        }
+
+        public static string GetHighScorePath()
+        {
+            return highscorepath;
+        }
+
         //No csv excel? SQL server alternative?
         public static void WriteScores(int computerscore, int playerscore)
         {
-            string readpath = @"C:\users\ssd\desktop\highscores.csv";
-            string writepath = @"C:\users\ssd\desktop\highscores.csv";
-            List<string> highscores = new List<string>();
 
-            //Read current scores
-            using (StreamReader astreamread = new StreamReader(readpath))
+            try
             {
-                while(astreamread.Peek() > -1)
-                {
-                    highscores.Add(astreamread.ReadLine());
-                }
-                
-                
-            }
+                List<string> highscores = new List<string>();
 
-            using (StreamWriter astreamwrite = new StreamWriter(writepath))
-            {
-                //Write current scores 
-                foreach(string x in highscores)
+                //Read current scores
+                using (StreamReader astreamread = new StreamReader(GetHighScorePath()))
                 {
-                    var array = x.Split(',');
-                    astreamwrite.WriteLine($"{array[0]}, {array[1]}");
+                    while (astreamread.Peek() > -1)
+                    {
+                        highscores.Add(astreamread.ReadLine());
+                    }
+
+                    astreamread.Close();
                 }
 
-                //Append new score
-                astreamwrite.WriteLine($"{computerscore}, {playerscore}");
+                using (StreamWriter astreamwrite = new StreamWriter(GetHighScorePath()))
+                {
+                    //Write current scores 
+                    foreach (string x in highscores)
+                    {
+                        var array = x.Split(',');
+                        astreamwrite.WriteLine($"{array[0]}, {array[1]}");
+                    }
+
+                    //Append new score
+                    astreamwrite.WriteLine($"{computerscore}, {playerscore}");
+                    astreamwrite.Close();
+                }
             }
+            catch(Exception e) { Console.WriteLine($"SaveRestoreFunc -> WriteScores(int, int) + {e.Message}\n{e.InnerException}"); }
+ 
 
         }
 
@@ -119,35 +144,44 @@ namespace ReturnChar
         {
 
             //0 comp //1 player
-            string readpath = @"C:\users\ssd\desktop\highscores.csv";
-            List<string> listofscore = new List<string>();
-
-            using (StreamReader d = new StreamReader(readpath))
+            try
             {
-                while (d.Peek() > -1)
+
+                List<string> listofscore = new List<string>();
+
+                using (StreamReader d = new StreamReader(GetHighScorePath()))
                 {
-                    var gamma = d.ReadLine().Split(',');
-                    listofscore.Add(gamma[1]);
-
-                }
-
-                if (listofscore.Count() >= 5)
-                {
-                    var listofscoreints = listofscore.Select(k => Convert.ToInt32(k)).ToList();
-                    listofscoreints.Sort();
-                    listofscoreints.Reverse();
-
-                    for (int i = 0; i < 5; i++)
+                    while (d.Peek() > -1)
                     {
-                        Console.WriteLine($"Player score = {listofscoreints[i]}");
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("High score list is < 5");
-                }
+                        var gamma = d.ReadLine().Split(',');
+                        var difference = Convert.ToInt32(gamma[1]) - Convert.ToInt32(gamma[0]);
+                        listofscore.Add(difference.ToString());
 
+
+                    }
+
+                    if (listofscore.Count() >= 5)
+                    {
+                        var listofscoreints = listofscore.Select(k => Convert.ToInt32(k)).ToList(); // convert list strings to list of ints
+                        listofscoreints.Sort();
+                        listofscoreints.Reverse();
+
+                        Console.WriteLine("\nTop 5 greatest differences...");
+
+                        for (int i = 0; i < 5; i++)
+                        {
+                            Console.WriteLine($"Playerscore = {listofscoreints[i]}");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("High score list is < 5");
+                    }
+                    d.Close();
+                }
             }
+            catch (Exception e) { Console.WriteLine($"SaveRestoreFunc -> ReturnHighScores() + {e.Message}\n{e.InnerException}"); }
+
 
         }
     }

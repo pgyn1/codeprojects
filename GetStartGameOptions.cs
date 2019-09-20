@@ -13,14 +13,24 @@ namespace ReturnChar
         //GetDifficultyLevel
         //Returning to lower case
         //Defaults matching the defaults in the GameSeq***
+        public static UserBox UserBoxGetStart = new UserBox();
 
         public static string GetGameFileList()
         {
             try
             {
+                const string filepath = @"C:\program files\returnchar\gamelists\";
+
+                Menu.EnumDirs("C:/program files/returnchar/gamelists/");
+                Console.WriteLine($"Current path = {filepath}");
                 Console.WriteLine("\nInput a Gamefile List = ");
-                string filepath = @"";
-                return filepath+Console.ReadLine().ToLower();
+
+                var gamelistfilepath = filepath + Console.ReadLine().ToLower();
+                Book.SetReadFromStream(gamelistfilepath);
+                Book.SetDictionary();
+
+                UserBoxGetStart.UserBoxDisplayBookY(Book.GetDictionary(), 'A');
+                return gamelistfilepath;
             }
            
             catch(Exception e)
@@ -28,6 +38,33 @@ namespace ReturnChar
                 Console.WriteLine($"GetStartGameOptions -> GetGameFileList() + {e.Message}\n{e.InnerException}");
                 return "";
             }
+        }
+
+        //GetNewGameOrRestoreGame
+        public static char GetNewRes()
+        {
+            bool isnr = false;
+
+            try
+            {
+                Console.Write($"'N'ew Game or 'R'estore = ");
+                char[] newreschar = { 'N', 'R' };
+                var input = GetChar(Console.ReadLine());
+                foreach (char x in newreschar)
+                {
+                    if (x.Equals(input)) { isnr = true; break; }
+                }
+
+                if (isnr == true) return input; else return 'N';
+            }
+
+            catch (Exception e)
+            {
+                Console.WriteLine($"{e.Message}");
+                Console.WriteLine($"{e.InnerException}");
+                return 'N';
+            }
+
         }
 
         //Return the difficulty level of the game ranging from easy to super
@@ -38,7 +75,7 @@ namespace ReturnChar
 
             try
             {
-                Console.Write($"Return Level ('E & M' Game Model Zero, 'H & S' Game Model One) = ");
+                Console.Write($"Return Level ('E, M, H & S') = ");
                 char[] chararr = { 'E', 'M', 'H', 'S' };
                 input = Console.ReadLine();
 
@@ -136,25 +173,6 @@ namespace ReturnChar
                 return int.Parse("5");
             }
     
-        }
-
-        //GetNewGameOrRestoreGame
-        public static char GetNewRes()
-        {
-            // S(save) R(restore)
-            Console.Write($"Start new game or restore = ");
-            try
-            {
-                return GetChar(Console.ReadLine());
-            }
-
-            catch(Exception e)
-            { 
-                Console.WriteLine($"{e.Message}");
-                Console.WriteLine($"{e.InnerException}");
-                return 'N';
-            }
-            
         }
 
         public static char GetChar(string x)

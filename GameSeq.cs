@@ -10,33 +10,37 @@ namespace ReturnChar
 {
     class GameSeq
     {
+
         //
+        private static Stopwatch stopwatchtime = new Stopwatch();
+        public static UserBox UserBoxGameSeq = new UserBox();
+        public static Book BookGameSeq = new Book();
+
+        //
+        public static string GameOver;
+        public static string NoElementsInSequence;
+        public static string GameModelZero;
+        public static string GameModelOne;
+        public static string DisplayMenu;
+
         public SaveRestoreFunc StartNewRestore = new SaveRestoreFunc();
         public Valid ValidGameSeq = new Valid();
         public GetStartGameOptions getstart = new GetStartGameOptions();
-        private Stopwatch stopwatchtime = new Stopwatch();
+       
         public Menu UserBoxMenu = new Menu();
-        public UserBox UserBoxGameSeq = new UserBox();
         public Random RandGameSeq = new Random();
-        public Book BookGameSeq = new Book();
         public Player game = new Player();
 
-        //
-        public string GameOver;
-        public string NoElementsInSequence;
-        public string GameModelZero;
-        public string GameModelOne;
+        public static bool IsPlaying { get; set; }
+        public static int Timer { get; set; }
+        public static int RandNumber { get; set; }
+        public static List<Book> GameArray { get; set; }
+        public static int GameScore { get; set; }
+        public static char DiffLvl { get; set; }
+        public static char Mode { get; set; }
+        public static char NewRestore { get; set; }
 
-        public bool IsPlaying { get; set; }
-        public int Timer { get; set; }
-        public int GameScore { get; set; }
-        public char DiffLvl { get; set; }
-        public char Mode { get; set; }
-        public char NewRestore { get; set; }
-        public int RandNumber { get; set; }
-        public string[] RestoredSavedArray { get; set; }
-        public List<Book> GameArray { get; set; }
-        public TimeSpan TimeSpanTimer { get; set; }
+        //public string[] RestoredSavedArray { get; set; }
 
         public GameSeq(char newrestore, char difflvl, char mode)
         {
@@ -47,47 +51,63 @@ namespace ReturnChar
             Mode = mode; //'X' timer option, 'Y' list==0, 'Z' Target Score
             IsPlaying = true;
             GameArray = new List<Book>();
-            GameOver = "\t\t\tGame Over";
-            GameModelZero = "\t\t\tGame model zero";
-            GameModelOne = "\t\t\tGame model one";
-            NoElementsInSequence = "\t\t\t!Any() Sequence";
+            GameOver = "\nGame Over";
+            GameModelZero = "\nGame model zero";
+            GameModelOne = "{Game model one}";
+            NoElementsInSequence = "!Any() Sequence";
+            DisplayMenu = "\n\nDisplay menu(y) or continue(enter) ?\n";
             RandNumber = RandGameSeq.Next(2); // Return a random number < 2 for the gamemodel cycles
-            
             Game();
+
         }
 
         static GameSeq()
         {
-
+         
+            
         }
 
-        public void Game()
+        public static void SetStatics()
         {
-            if(NewRestore.Equals('R') || NewRestore.Equals('N'))
+            Player.RestoreComputerScore(0);
+            Player.RestorePlayerScore(0);
+
+            //Book.SetReadFromStream(GetStartGameOptions.GetGameFileList());
+            
+            Book.SetDictionary();
+            Valid.SetValidDictionary(Book.GetDictionary()); // Case of the dictionary being reduced in the display
+            Valid.GetSelectedBooks().Clear();
+        }
+
+        public static void Game()
+        {
+            SetStatics();
+
+            if (NewRestore.Equals('N') || NewRestore.Equals('R'))
             {
                 try
                 {
-                    Player.RestoreComputerScore(0);
-                    Player.RestorePlayerScore(0);
-
+               
                     switch (Mode.ToString().ToLower())
                     {
                         case "x":
                             Timer = GetStartGameOptions.GetTimer();
+                            Console.WriteLine("Mode = Timer");
                             //TimeSpanTimer = new TimeSpan(DateTime.Now.Hour, DateTime.Now.Minute + Timer, DateTime.Now.Second);
-                            stopwatchtime.Start();
+                            stopwatchtime.Restart();
+                            break;
+                        case "y":
+                            Console.WriteLine("Mode = Empty");
                             break;
                         case "z":
                             GameScore = GetStartGameOptions.GetGameScore();
+                            Console.WriteLine("Mode = GameScore");
                             break;
                         default:
+                            GameScore = GetStartGameOptions.GetGameScore();
+                            Console.WriteLine("Mode = GameScore");
                             break;
                     }
-
-                    //Book.SetReadFromStream(GetStartGameOptions.GetGameFileList());
-                    Book.SetDictionary();
-                    Valid.SetValidDictionary(Book.GetDictionary());
-                    Valid.GetSelectedBooks().Clear();
 
                     switch (DiffLvl.ToString().ToLower())
                     {
@@ -95,7 +115,7 @@ namespace ReturnChar
                         case "m":
                             //Display rules
                             GameArray = BookGameSeq.GetGameArray(DiffLvl);
-                            if (GameArray.Count() == 0 || GameArray == null) { } else { GetGameModelZero(); }
+                            if (GameArray.Count() == 0 || GameArray == null) { } else { GetGameModelOne(); }
                             break;
                         case "h":
                         case "s":
@@ -106,10 +126,10 @@ namespace ReturnChar
                         default:
                             //if (BookGameSeq.GetComStateListEasy()) GameArray = Book.ComStateList;
                             GameArray = BookGameSeq.GetGameArray(DiffLvl);
-                            if (GameArray.Count() == 0 || GameArray == null) { } else { GetGameModelZero(); }
+                            if (GameArray.Count() == 0 || GameArray == null) { } else { GetGameModelOne(); }
                             break;
                     }
-
+                    //calling stopwatch restart here? Saving a few ms
 
                 }
                 catch (ArgumentNullException argexc)
@@ -132,27 +152,57 @@ namespace ReturnChar
                     Menu.DisplayMenuOptions();
                 }
             }
-         
- 
 
         }
 
-        public void GameModelZeroDisplays()
+        public static void GameModelZeroDisplays()
         {
             // repeats until computer list exh, player quits, time limit or score 
             UserBoxGameSeq.SetBorderDisplay();
             Console.WriteLine($"{GameModelZero}");
+            Console.WriteLine($"Player has {Player.GetTimerLimit()}ms to select an answer");
+            Console.ReadLine();
         }
 
-        public void GameModelOneDisplays()
+        public static void GameModelOneDisplays()
         {
             // repeats until computer list exh, player quits, time limit or score 
-            UserBoxGameSeq.SetBorderDisplay();
+            
+            UserBoxGameSeq.SetOne(DiffLvl,Mode);
             Console.WriteLine($"{GameModelOne}");
+            Console.Write($"{"{"}Player has {Player.GetTimerLimit()}ms to select an answer{"}"}");
+            UserBoxGameSeq.SetBorderDisplay();
+            Console.ReadLine();
+        }
+
+        public static void SetIsPlayingModelOne(int randnumber)
+        {
+            if (randnumber == 0)
+            {
+                //if 0 the comp turns 1st which means the player must have a random input
+                Player.SetPlayerInput(Player.GetAlphabet());
+                Console.WriteLine($"Return Char [{Player.GetPlayerInput()}]");
+                Console.ReadLine();
+
+            }
+            else
+            {
+                //else the player 1st which means the computer must have a random input // A pass_ or a invalid response sets the prev to a random char GetAlphabet()
+                Player.SetComputerInput(Player.GetAlphabet());
+                Console.WriteLine($"Return Char [{Player.GetComputerInput()}]");
+                Console.ReadLine();
+            }
+        }
+
+        public static void EndGameModel()
+        {
+            SaveRestoreFunc.WriteScores(Player.GetComputerScore(), Player.GetPlayerScore());
+            Console.ReadKey();
+            Menu.DisplayMenuOptions();
         }
 
         //Model1 // Returning a random char in zero mode  
-        public void GetGameModelZero()
+        public static void GetGameModelZero()
         {
             GameModelZeroDisplays();
 
@@ -160,7 +210,8 @@ namespace ReturnChar
             {
                 while (IsPlaying)
                 {
-                    UserBoxGameSeq.SetOne(DiffLvl,Mode);
+
+                    Console.Clear();
 
                     Player.SetComputerInput(GameArray); // Computer set an answer from finite list
                     IfContains(Player.GetComputerInput()); //If contains reducing the GameArray
@@ -176,7 +227,6 @@ namespace ReturnChar
                     Player.SetComputerInput(GameArray, Player.GetPlayerInput()); // computer responds
                     IfContains(Player.GetComputerInput());
 
-                    if (!UserBoxGameSeq.IsPlayingGameDisplay()) { break; } //If bool return false call the main menu option and break from loop
                     SwitchMode();
                     
                 }
@@ -187,7 +237,8 @@ namespace ReturnChar
             {
                 while (IsPlaying)
                 {
-                    UserBoxGameSeq.SetOne(DiffLvl,Mode);
+
+                    Console.Clear();
 
                     Player.SetPlayerInput(); // player sets an answer from 'finite' list
                     IfContains(Player.GetPlayerInput());
@@ -202,7 +253,6 @@ namespace ReturnChar
                     Player.SetPlayerInput(DiffLvl, Player.GetComputerInput()); // player responds 
                     IfContains(Player.GetPlayerInput());
 
-                    if (!UserBoxGameSeq.IsPlayingGameDisplay()) { break; } //If bool return false call the main menu option and break from loop
                     SwitchMode();
                 }
 
@@ -212,27 +262,10 @@ namespace ReturnChar
 
         }
 
-        public void SetIsPlayingModelOne(int randnumber)
-        {
-            if(randnumber == 0)
-            {
-                //if 0 the comp turns 1st which means the player must have a random input
-                Player.SetPlayerInput(Player.GetAlphabet());
-                Console.WriteLine($"\t\t\tReturn Char {Player.GetPlayerInput()}");
-                Console.ReadLine();
-
-            }
-            else
-            {
-                //else the player 1st which means the computer must have a random input // A pass_ or a invalid response sets the prev to a random char GetAlphabet()
-                Player.SetComputerInput(Player.GetAlphabet());
-                Console.WriteLine($"\t\t\tReturn Char {Player.GetComputerInput()}");
-                Console.ReadLine();
-            }
-        }
         //Model2
-        public void GetGameModelOne()
+        public static void GetGameModelOne()
         {
+
             GameModelOneDisplays();
             SetIsPlayingModelOne(RandNumber);
 
@@ -240,7 +273,9 @@ namespace ReturnChar
             {
                 while (IsPlaying)
                 {
-                    UserBoxGameSeq.SetOne(DiffLvl, Mode);
+                    Console.Clear();
+                    Console.WriteLine($"Char = [{Player.GetPlayerInput().Last()}]");
+
                     Player.SetComputerInput(GameArray, Player.GetPlayerInput()); //computerinput is set based upon the options in the gamearray and last letter of the playerinput
                     IfContains(Player.GetComputerInput());
                     if (Mode.Equals('Z')) if (!IfScore()) break; //If mode, ifscore returns false break loop
@@ -250,7 +285,6 @@ namespace ReturnChar
                     Player.SetPlayerInput(DiffLvl, Player.GetComputerInput());
                     IfContains(Player.GetPlayerInput());
 
-                    if (!UserBoxGameSeq.IsPlayingGameDisplay()) { break; } //If bool return false call the main menu option and break from loop
                     SwitchMode();
                 }
 
@@ -261,7 +295,9 @@ namespace ReturnChar
 
                 while (IsPlaying)
                 {
-                    UserBoxGameSeq.SetOne(DiffLvl, Mode);
+                    Console.Clear();
+                    Console.WriteLine($"Char = [{Player.GetComputerInput().Last()}]"); ;
+
                     Player.SetPlayerInput(DiffLvl, Player.GetComputerInput()); //player input is based upon the last letter of the computerinput
                     IfContains(Player.GetPlayerInput());
                     if (Mode.Equals('Z')) if (!IfScore()) break;
@@ -271,7 +307,6 @@ namespace ReturnChar
                     Player.SetComputerInput(GameArray, Player.GetPlayerInput());
                     IfContains(Player.GetComputerInput());
 
-                    if (!UserBoxGameSeq.IsPlayingGameDisplay()) { break; } //If bool returns false call the main menu option and break from loop
                     SwitchMode();
                 }
 
@@ -280,15 +315,8 @@ namespace ReturnChar
 
         }
 
-        public void EndGameModel()
-        {
-            SaveRestoreFunc.WriteScores(Player.GetComputerScore(), Player.GetPlayerScore());
-            Console.ReadKey();
-            Menu.DisplayMenuOptions();
-        }
-
         // X Y Z  TIME EMP T
-        public void SwitchMode()
+        public static void SwitchMode()
         {
             switch (Mode.ToString().ToLower())
             {
@@ -312,19 +340,8 @@ namespace ReturnChar
         }
 
         //TIME
-        public void GameSeqTimer()
+        public static void GameSeqTimer()
         {
-            //Set timer in minutes 
-            //consider stopwatch/timespan
-
-            //if (new TimeSpan(DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second) >= (TimeSpanTimer))
-            //{
-            //    Console.WriteLine($"{GameOver}");
-            //    UserBoxGameSeq.DisplayScores(Player.GetComputerScore(), Player.GetPlayerScore());
-            //    IsPlaying = false;
-            //    stopwatchtime.Stop();
-            //}
-
             if (stopwatchtime.ElapsedMilliseconds >= Timer)
             {
                 Console.WriteLine($"{GameOver} Final time = {stopwatchtime.Elapsed}");
@@ -341,13 +358,16 @@ namespace ReturnChar
             }
             else
             {
-                UserBoxGameSeq.IsPlayingGameDisplays(DiffLvl, Mode, GameScore, Timer, Player.GetPlayerScore(), Player.GetComputerScore(), RandNumber, GameArray);
                 DisplayerTimer();
+                Console.WriteLine($"{DisplayMenu}");
+                if (Console.ReadLine().ToLower().Equals("y")) UserBoxGameSeq.IsPlayingGameDisplays(DiffLvl, Mode, GameScore, Timer, Player.GetPlayerScore(), Player.GetComputerScore(), RandNumber, GameArray);
+                IsPlaying = UserBoxGameSeq.IsPlayingGameDisplay();
+                Console.ReadLine();
             }
         }
 
         //EMP
-        public void GameSeqEmpty()
+        public static void GameSeqEmpty()
         {
             // If list empty
             if (!GameArray.Any())
@@ -359,12 +379,15 @@ namespace ReturnChar
             }
             else
             {
-                UserBoxGameSeq.IsPlayingGameDisplays(DiffLvl, Mode, GameScore, Timer, Player.GetPlayerScore(), Player.GetComputerScore(), RandNumber, GameArray);
+                Console.WriteLine($"{DisplayMenu}");
+                if (Console.ReadLine().ToLower().Equals("y")) UserBoxGameSeq.IsPlayingGameDisplays(DiffLvl, Mode, GameScore, Timer, Player.GetPlayerScore(), Player.GetComputerScore(), RandNumber, GameArray);
+                IsPlaying = UserBoxGameSeq.IsPlayingGameDisplay();
+                Console.ReadLine();
             }
         }
 
         //T
-        public void GameSeqTarget()
+        public static void GameSeqTarget()
         {
             
             if (Player.GetComputerScore() == GameScore || Player.GetPlayerScore() == GameScore)
@@ -383,39 +406,44 @@ namespace ReturnChar
             }
             else
             {
-                UserBoxGameSeq.IsPlayingGameDisplays(DiffLvl, Mode, GameScore, Timer, Player.GetPlayerScore(), Player.GetComputerScore(), RandNumber, GameArray);
+                Console.WriteLine($"{DisplayMenu}");
+                if (Console.ReadLine().ToLower().Equals("y")) UserBoxGameSeq.IsPlayingGameDisplays(DiffLvl, Mode, GameScore, Timer, Player.GetPlayerScore(), Player.GetComputerScore(), RandNumber, GameArray); 
+                IsPlaying = UserBoxGameSeq.IsPlayingGameDisplay();
+                Console.ReadLine();
             }
 
         }
 
-        public void DisplayerTimer()
+        public static void DisplayerTimer()
         {
-          
+
+            Console.WriteLine("");
+
                 switch (Timer)
                 {
                     case 60000:
-                        Console.Write($"\t\t\tCurrent Time = {stopwatchtime.Elapsed} Time limit = 1 minute");
+                        Console.Write($"Current Time = {stopwatchtime.Elapsed} Time limit = 1 minute");
                         break;
                     case 120000:
-                        Console.Write($"\t\t\tCurrent Time = {stopwatchtime.Elapsed} Time limit = 2 minutes");
+                        Console.Write($"Current Time = {stopwatchtime.Elapsed} Time limit = 2 minutes");
                         break;
                     case 180000:
-                        Console.Write($"\t\t\tCurrent Time = {stopwatchtime.Elapsed} Time limit = 3 minutes");
+                        Console.Write($"Current Time = {stopwatchtime.Elapsed} Time limit = 3 minutes");
                         break;
                     case 240000:
-                        Console.Write($"\t\t\tCurrent Time = {stopwatchtime.Elapsed} Time limit = 4 minutes");
+                        Console.Write($"Current Time = {stopwatchtime.Elapsed} Time limit = 4 minutes");
                         break;
                     case 300000:
-                        Console.Write($"\t\t\tCurrent Time = {stopwatchtime.Elapsed} Time limit = 5 minutes ");
+                        Console.Write($"Current Time = {stopwatchtime.Elapsed} Time limit = 5 minutes ");
                         break;
                     default:
-                        Console.Write($"\t\t\tCurrent Time = {stopwatchtime.Elapsed} Time limit = Timer limit n/a");
+                        Console.Write($"Current Time = {stopwatchtime.Elapsed} Time limit = {Timer}");
                         break;
                 }
 
         }
 
-        public bool IfScore()
+        public static bool IfScore()
         {
             if (Player.GetComputerScore() == GameScore || Player.GetPlayerScore() == GameScore)
             {
@@ -430,7 +458,7 @@ namespace ReturnChar
 
         }
 
-        private void IfContains(string inputx)
+        private static void IfContains(string inputx)
         {
 
             for (int i = 0; i < GameArray.Count(); i++)

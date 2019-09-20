@@ -20,15 +20,6 @@ namespace ReturnChar
         public static List<Book> ComStateList = new List<Book>();
         public static List<Book> Dictionary = new List<Book>();
 
-        public int BookID { get; set; } // 0 .BookID
-        public string Name { get; set; } // 1 .Name
-        public string Type { get; set; } // 2 .Type
-        public string Where { get; set; } // 3 .Where
-        public List<string> NameAssoc { get; set; } // 4 <- Name
-        public List<string> TypeAssoc { get; set; } // 5 <- Type
-        public List<string> WhereAssoc { get; set; } // 6 <- Where
-        public List<string> ExtraList { get; set; } // 7 <- Extra
-
         public static bool BoolBookEqual;
         private static string ReadFromStream;
 
@@ -43,6 +34,15 @@ namespace ReturnChar
             Dictionary = new List<Book>();
 
         }
+
+        public int BookID { get; set; } // 0 .BookID
+        public string Name { get; set; } // 1 .Name
+        public string Type { get; set; } // 2 .Type
+        public string Where { get; set; } // 3 .Where
+        public List<string> NameAssoc { get; set; } // 4 <- Name
+        public List<string> TypeAssoc { get; set; } // 5 <- Type
+        public List<string> WhereAssoc { get; set; } // 6 <- Where
+        public List<string> ExtraList { get; set; } // 7 <- Extra
 
         public static void SetReadFromStream(string X)
         {
@@ -94,6 +94,8 @@ namespace ReturnChar
                                 });
                             }
                         }
+
+                        aStreamReader.Close();
                     }
                 }
                 catch (StackOverflowException stackexc)
@@ -143,14 +145,14 @@ namespace ReturnChar
             //Filelist
             //list books - > list strings
 
-            if (x.Count() >= 100 && x.Count() <= 300)
+            if (x.Count() >= 100)
             {
                 //and column count = 8
                 return true;
             }
             else
             {
-                Console.WriteLine($"Length of dictionary must be b/t 100 & 300");
+                Console.WriteLine($"Length of dictionary must be between 100 & 400");
         
                 return false;
             }
@@ -240,7 +242,7 @@ namespace ReturnChar
 
                 if (!CheckLengthDictionary(DictAns)) { return false; }
 
-                for (int i = 0; i < Convert.ToInt32(0.50 * DictAns.Count()); i++)
+                for (int i = 0; i < Convert.ToInt32(0.45 * DictAns.Count()); i++)
                 {
                     var temp_var = rand.Next(DictAns.Count());
                     while (tempIntList.Contains(temp_var))

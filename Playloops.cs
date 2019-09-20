@@ -21,8 +21,12 @@ namespace ReturnChar
 
         public static void SetSoundPath()
         {
+            const string filepath = "C:/program files/returnchar/sounds/";
+            Menu.EnumDirs("C:/program files/returnchar/sounds/");
+            Console.WriteLine($"Current sound filepath = {filepath}");
 
-            Console.Write("Input filepath = "); var input = Console.ReadLine();
+            Console.Write("Input sound filepath = "); var input = filepath+Console.ReadLine();
+
             try
             {
                 soundfileobj = new SoundPlayer(input);
@@ -114,9 +118,6 @@ namespace ReturnChar
             }
 
         }
-
-
-
 
     }
 }

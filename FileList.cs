@@ -14,6 +14,7 @@ namespace ReturnChar
         // A limit min. on the size of a list
         public static List<string> FileListDictAns { get; set; }
         public static List<string> tempdictans;
+        public static Valid FileListValid = new Valid();
 
         public static int numbercount;
 
@@ -143,12 +144,16 @@ namespace ReturnChar
                 int count = 0;
                 foreach (string x in tempdictans)
                 {
-                    var arraysplit = x.Split(',');
-                        
-                    astreamwrite.WriteLine($"{count}, {arraysplit[0]}, {arraysplit[1]}, {arraysplit[2]}, {arraysplit[3]}, {arraysplit[4]}, {arraysplit[5]}, {arraysplit[6]}");
+                    string[] aRow = x.Split(',');
 
-                    count++;
-                   
+                    if (!aRow[1].Equals("City"))
+                    {
+                        
+                        //ID name type where nameassoc typeassc whereassc extra
+                        astreamwrite.WriteLine($"{count},{FileListValid.GetInputChar(aRow[1])},{aRow[3]},{FileListValid.GetInputChar(aRow[6])}, {"_null"}, {"_null"}, {"_null"}, {"_null"}");
+                        count++;
+                    }
+                    
 
                 }
             }
