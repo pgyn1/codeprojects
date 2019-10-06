@@ -1,15 +1,15 @@
 # codeprojects
 
-.Overview with code examples.txt
+.Code examples.txt
 provides code snippets from various projects
- 
-.zip python cipher
- university programming project and coursework
- encryption application
 
 .zip java solar system
  university programming project and coursework
  solar system simulation
+ 
+.zip python cipher
+ university programming project and coursework
+ encryption application
 
 .zip towers of hanoi
  university programming project and coursework
