@@ -1,48 +1,73 @@
-Code Examples
-
-#Web Control Ltd (Search function for payroll system, Unibasic language) 
-
-******* 
+#Web Control Ltd (Search function for payroll system, Unibasic language)
+*******
 * Begin @ ‘For X = 1 to N’
-* Where X = multivalue variable and N = Number/Upper limit of cycles 
+* Where X = multivalue variable and N = Number/Upper limit of cycles
 * Assign the first instance to a temp variable
 * Assign the search term to a temp variable
-* Convert to appropriate format (if processing hours worked) 
+* Convert to appropriate format (if processing hours worked)
 * Compare the lowercase values
-* Increment the counter value 
-* Return results 
+* Increment the counter value
+* Return results
 ********
-
 READNEXT ID_SEARCH ELSE GOTO 0001*
 READ REC_SEARCH FROM EMPLOYMST,ID_SEARCH ...
-
-FOR X = 1 TO N 
-  RECORD_VAL_VAR = REC_SEARCH <SFA,X> 
-  SEARCH_TEMP_VAR = SEARCH_TERM 
-  IF SFA = 10 THEN RECORD_VAL_VAR = OCONV(RECORD_VAL_VAR,"MD2")
-  IF DOWNCASE(RECORD_VAL_VAR) = DOWNCASE(SEARCH_TEMP_VAR) 
-      THEN  COUNTER_SEARCH += 1 
-      TEMP_STRING = "Matching ID":COL:ID_SEARCH 
-      CALL SB.DISP(4,"Found result for       ":SEARCH_TERM)  
+FOR X = 1 TO N
+ RECORD_VAL_VAR = REC_SEARCH <SFA,X>
+ SEARCH_TEMP_VAR = SEARCH_TERM
+ IF SFA = 10 THEN RECORD_VAL_VAR = OCONV(RECORD_VAL_VAR,"MD2")
+ IF DOWNCASE(RECORD_VAL_VAR) = DOWNCASE(SEARCH_TEMP_VAR)
+ THEN COUNTER_SEARCH += 1
+ TEMP_STRING = "Matching ID":COL:ID_SEARCH
+ CALL SB.DISP(4,"Found result for ":SEARCH_TERM)
 NEXT X
-
 0001*
 
-#FileList class (C# & excel spreadsheet processing)
+#JSONconversionClass (Converting a json string to a C# object, C#
+language)
+*****
+*Open and read a json file with data and append to an empty string
+*deserialize and cast a json object to a List of class objects
+*cycle through the list of class objects using a foreach loop
+*output the properties
+*****
+List<csharpobj> listOfItems =
+(List<csharpobj>)JsonConvert.DeserializeObject(jsonstring,typeof(List<csharpobj>));
 
-*****
-*Part of a querying function taken from a switch statement
-*array[i] is a string[] array split from a List<string>s
-*If the ith string == user input 
-*increment the num counter, write results and return the index of the entry
-*assign numbercount to num where we want to return the counter
-*****
-  case "equals":
-                        if (array[i].Trim().ToLower().Equals(j.ToLower()))
-                        {
-                            num++;
-                            Console.WriteLine($"{p} {num}");
-                            Console.WriteLine($"Index = {tempdict.IndexOf(p)}");
-                            numbercount = num;
-                        }
-                        break;
+foreach (csharpobj item in listOfItems)
+{
+ Console.WriteLine($"{item.id}");
+ Console.WriteLine($"{item.name}");
+ Console.WriteLine($"{item.type}");
+ Console.WriteLine($"{item.where}");
+
+}
+
+#Player Class (Computer AI responding to user input, C# language)
+*******
+* assign the last letter of the user input to a variable, this last letter is a char
+* assign the strings in a given list, beginning with the last letter of the
+* user input to a list<strings> using the list.FindAll function
+* if any elements in the list<strings> returned
+* assign an index that is less than the length of the returned list<strings>
+* use the index for the value of the randomly selected string
+* this randomly selected string is assigned to the computer’s input
+* if the computerinput or string is validated against a dictionary of items
+*Increment the computer’s score
+********
+try {
+ var lastletter = player.Last().ToString().ToLower();
+ var SelectedListNew = gamearrayX.FindAll(q => q.Name.ToLower().StartsWith(lastletter));)
+ if (SelectedListNew.Any())
+ {
+ var randindx = RandPlayer.Next(SelectedListNew.Count());
+ computerinput = SelectedListNew[randindx].Name;
+ if (ValidPlayer.ValidComputerName(computerinput))
+ {
+ SetComputerScore(1);
+ }
+ }
+…
+…
+}catch(Exception exc){
+ Console.Writeline($”{exc.message}”);
+}
