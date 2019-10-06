@@ -13,7 +13,7 @@ provides code snippets from various projects
 
 .zip towers of hanoi
  university programming project and coursework
- towers of hanoi problem functional programming project
+ functional programming project
 
 .zip unibasic payroll system
  webcontrol ltd 
